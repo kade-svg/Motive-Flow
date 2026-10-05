@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#f5f5f7" />
+  <meta name="description" content="Motive Flow — a calmer place to plan, organize, focus, and capture ideas." />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <title>Motive Flow</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <section id="authView" class="auth-shell">
+    <div class="auth-glow auth-glow-a"></div>
+    <div class="auth-glow auth-glow-b"></div>
+    <div class="auth-card">
+      <div class="auth-brand" aria-label="Motive Flow">
+        <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span>Motive <strong>Flow</strong></span>
+      </div>
+
+      <div class="auth-heading">
+        <span class="eyebrow">Your space</span>
+        <h1 id="authTitle">Welcome back.</h1>
+        <p id="authSubtitle">Sign in to your local Motive Flow account.</p>
+      </div>
+
+      <div class="auth-tabs" role="tablist" aria-label="Account mode">
+        <button class="auth-tab active" id="signInTab" type="button" role="tab" aria-selected="true">Sign in</button>
+        <button class="auth-tab" id="signUpTab" type="button" role="tab" aria-selected="false">Create account</button>
+      </div>
+
+      <form id="authForm" class="auth-form">
+        <label>
+          <span>Name</span>
+          <input id="nameInput" name="name" autocomplete="name" placeholder="Your name" maxlength="40" hidden />
+        </label>
+        <label>
+          <span>Username</span>
+          <input id="usernameInput" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="e.g. kade" maxlength="24" required />
+        </label>
+        <label>
+          <span>Password</span>
+          <input id="passwordInput" name="password" type="password" autocomplete="current-password" placeholder="At least 6 characters" minlength="6" required />
+        </label>
+        <label id="confirmPasswordWrap" hidden>
+          <span>Confirm password</span>
+          <input id="confirmPasswordInput" name="confirmPassword" type="password" autocomplete="new-password" placeholder="Enter it again" minlength="6" />
+        </label>
+        <button class="primary-button auth-submit" id="authSubmit" type="submit">Sign in <span>→</span></button>
+      </form>
+
+      <p id="authError" class="form-error" aria-live="polite"></p>
+      <p class="local-note"><span aria-hidden="true">⌁</span> Accounts and app data stay on this device/browser. No server is required.</p>
+    </div>
+  </section>
+
+  <div id="appView" class="app-shell" hidden>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-top">
+        <div class="app-brand" aria-label="Motive Flow">
+          <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+          <span>Motive <b>Flow</b></span>
+        </div>
+        <button class="sidebar-collapse" id="sidebarCollapse" type="button" aria-label="Collapse sidebar">←</button>
+      </div>
+
+      <div class="sidebar-user" id="sidebarUser">
+        <span class="avatar" id="avatar">K</span>
+        <div><strong id="sidebarName">Flow User</strong><small id="sidebarUsername">@user</small></div>
+      </div>
+
+      <nav class="main-nav" aria-label="Motive Flow">
+        <button class="nav-item active" data-view="today"><span>⌂</span><b>Today</b></button>
+        <button class="nav-item" data-view="tasks"><span>✓</span><b>Tasks</b><em id="taskCountBadge">0</em></button>
+        <button class="nav-item" data-view="projects"><span>□</span><b>Projects</b></button>
+        <button class="nav-item" data-view="focus"><span>◷</span><b>Focus</b></button>
+        <button class="nav-item" data-view="notes"><span>▤</span><b>Notes</b></button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <button class="nav-item" data-view="settings"><span>⚙</span><b>Settings</b></button>
+        <button class="nav-item logout-item" id="logoutButton"><span>↪</span><b>Sign out</b></button>
+      </div>
+    </aside>
+
+    <div class="app-main">
+      <header class="mobile-topbar">
+        <button class="profile-button" id="mobileProfile" type="button" aria-label="Open account settings">K</button>
+        <div class="mobile-brand" aria-label="Motive Flow">Motive <b>Flow</b></div>
+        <button class="icon-button" id="mobileQuickAdd" type="button" aria-label="Add task">＋</button>
+      </header>
+
+      <main class="page-wrap">
+        <section class="app-page active" id="view-today" data-page="today">
+          <div class="page-heading">
+            <div><span class="eyebrow">Your day</span><h1 id="todayGreeting">Good morning.</h1><p id="todayDate"></p></div>
+            <button class="primary-button" id="todayAddButton" type="button">＋ Add task</button>
+          </div>
+
+          <div class="today-grid">
+            <div class="surface task-surface">
+              <div class="surface-heading"><div><span class="eyebrow">Up next</span><h2>Today</h2></div><span id="todayProgress" class="surface-stat">0 open</span></div>
+              <div id="todayTasks" class="task-list"></div>
+              <div id="todayEmpty" class="empty-state" hidden><div class="empty-icon">✦</div><h3>Your day is clear.</h3><p>Add a task and make the next thing easy.</p><button class="text-button" type="button" data-action="add-task">Create a task →</button></div>
+            </div>
+
+            <div class="surface focus-card">
+              <div class="surface-heading"><div><span class="eyebrow">Focus</span><h2>One thing at a time.</h2></div><span class="focus-dot"></span></div>
+              <div class="focus-clock" id="todayFocusClock">25:00</div>
+              <p>Give one task your full attention, then take a proper break.</p>
+              <button class="primary-button" id="todayFocusButton" type="button">Start focus <span>→</span></button>
+            </div>
+          </div>
+        </section>
+
+        <section class="app-page" id="view-tasks" data-page="tasks">
+          <div class="page-heading"><div><span class="eyebrow">Organize</span><h1>Tasks.</h1><p>Keep the important things moving.</p></div><button class="primary-button" id="tasksAddButton" type="button">＋ Add task</button></div>
+          <div class="toolbar"><div class="segmented" id="taskFilters"><button class="active" data-filter="all">All</button><button data-filter="open">Open</button><button data-filter="done">Completed</button></div><div class="task-summary" id="tasksSummary"></div></div>
+          <div class="surface"><div id="allTasks" class="task-list"></div><div id="tasksEmpty" class="empty-state" hidden><div class="empty-icon">✓</div><h3>Nothing here yet.</h3><p>Your tasks will appear here.</p><button class="text-button" type="button" data-action="add-task">Add your first task →</button></div></div>
+        </section>
+
+        <section class="app-page" id="view-projects" data-page="projects">
+          <div class="page-heading"><div><span class="eyebrow">Structure</span><h1>Projects.</h1><p>Group work by what it is trying to become.</p></div><button class="primary-button" id="projectAddButton" type="button">＋ New project</button></div>
+          <div id="projectGrid" class="project-grid"></div>
+        </section>
+
+        <section class="app-page" id="view-focus" data-page="focus">
+          <div class="page-heading"><div><span class="eyebrow">Deep work</span><h1>Focus.</h1><p>A quiet timer for one thing at a time.</p></div></div>
+          <div class="focus-page-grid">
+            <div class="surface focus-main">
+              <div class="focus-ring"><div><span id="focusModeLabel">FOCUS</span><strong id="focusClock">25:00</strong><small id="focusHint">Ready when you are.</small></div></div>
+              <div class="focus-controls"><button class="secondary-button" id="focusResetButton" type="button">Reset</button><button class="primary-button" id="focusToggleButton" type="button">Start focus <span>→</span></button></div>
+              <div class="timer-modes"><button class="active" data-minutes="25">25 min</button><button data-minutes="5">5 min</button><button data-minutes="50">50 min</button></div>
+            </div>
+            <div class="surface focus-history"><div class="surface-heading"><div><span class="eyebrow">Momentum</span><h2>This week</h2></div><span class="surface-stat" id="focusSessionsCount">0 sessions</span></div><div class="focus-stats"><div><strong id="focusMinutesTotal">0</strong><span>minutes</span></div><div><strong id="focusCompletedTotal">0</strong><span>sessions</span></div></div><div id="focusHistoryList" class="history-list"></div></div>
+          </div>
+        </section>
+
+        <section class="app-page" id="view-notes" data-page="notes">
+          <div class="page-heading"><div><span class="eyebrow">Capture</span><h1>Notes.</h1><p>Ideas stay close to the work.</p></div><button class="primary-button" id="noteAddButton" type="button">＋ New note</button></div>
+          <div class="notes-layout"><div id="notesList" class="notes-list"></div><article class="surface note-editor" id="noteEditor"><div class="note-editor-top"><span class="eyebrow">Selected note</span><button class="icon-button" id="deleteNoteButton" type="button" aria-label="Delete note">⌫</button></div><input id="noteTitle" class="note-title-input" placeholder="Untitled note" /><textarea id="noteBody" placeholder="Start writing..."></textarea><div class="note-save-state" id="noteSaveState">Saved locally</div></article></div>
+        </section>
+
+        <section class="app-page" id="view-settings" data-page="settings">
+          <div class="page-heading"><div><span class="eyebrow">Preferences</span><h1>Settings.</h1><p>Your account and device-local Flow data.</p></div></div>
+          <div class="settings-grid">
+            <div class="surface settings-card"><div class="settings-heading"><span class="eyebrow">Account</span><h2 id="settingsName">Flow User</h2><p id="settingsUsername">@user</p></div><button class="secondary-button" id="renameButton" type="button">Change display name</button></div>
+            <div class="surface settings-card"><div class="settings-heading"><span class="eyebrow">Appearance</span><h2>Theme</h2><p>Use the interface that feels right.</p></div><div class="segmented" id="themeChoices"><button data-theme="light">Light</button><button data-theme="dark">Dark</button><button data-theme="system" class="active">System</button></div></div>
+            <div class="surface settings-card"><div class="settings-heading"><span class="eyebrow">Backup</span><h2>Your data.</h2><p>Move Flow to another device without a server.</p></div><div class="button-row"><button class="secondary-button" id="exportButton" type="button">Export backup</button><label class="secondary-button file-button">Import backup<input id="importInput" type="file" accept="application/json" hidden /></label></div></div>
+            <div class="surface settings-card danger-card"><div class="settings-heading"><span class="eyebrow">Local account</span><h2>Start fresh.</h2><p>Delete this account and all of its local data from this browser.</p></div><button class="danger-button" id="deleteAccountButton" type="button">Delete local account</button></div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <nav class="mobile-dock" aria-label="Primary navigation">
+      <button class="dock-item active" data-view="today"><span>⌂</span><small>Today</small></button>
+      <button class="dock-item" data-view="tasks"><span>✓</span><small>Tasks</small></button>
+      <button class="dock-item" data-view="projects"><span>□</span><small>Projects</small></button>
+      <button class="dock-item" data-view="focus"><span>◷</span><small>Focus</small></button>
+      <button class="dock-item" data-view="notes"><span>▤</span><small>Notes</small></button>
+      <button class="dock-item" data-view="settings"><span>⚙</span><small>Settings</small></button>
+    </nav>
+  </div>
+
+  <dialog id="taskDialog" class="modal">
+    <form method="dialog" id="taskForm" class="modal-card">
+      <div class="modal-top"><div><span class="eyebrow">New task</span><h2>What's next?</h2></div><button class="icon-button" value="cancel" aria-label="Close">×</button></div>
+      <label><span>Task</span><input id="taskTitleInput" name="title" required maxlength="120" placeholder="e.g. Finish the project plan" /></label>
+      <div class="form-grid"><label><span>Due</span><select id="taskDueInput"><option value="today">Today</option><option value="tomorrow">Tomorrow</option><option value="later">Later</option></select></label><label><span>Project</span><select id="taskProjectInput"><option value="">No project</option></select></label></div>
+      <div class="modal-actions"><button class="secondary-button" value="cancel">Cancel</button><button class="primary-button" value="default">Create task <span>→</span></button></div>
+    </form>
+  </dialog>
+
+  <dialog id="projectDialog" class="modal">
+    <form method="dialog" id="projectForm" class="modal-card">
+      <div class="modal-top"><div><span class="eyebrow">New project</span><h2>Give it a name.</h2></div><button class="icon-button" value="cancel" aria-label="Close">×</button></div>
+      <label><span>Project name</span><input id="projectNameInput" required maxlength="60" placeholder="e.g. Personal site" /></label>
+      <label><span>Color</span><select id="projectColorInput"><option value="lavender">Lavender</option><option value="sky">Sky</option><option value="mint">Mint</option><option value="peach">Peach</option></select></label>
+      <div class="modal-actions"><button class="secondary-button" value="cancel">Cancel</button><button class="primary-button" value="default">Create project <span>→</span></button></div>
+    </form>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>

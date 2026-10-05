@@ -1,0 +1,14 @@
+{
+  "name": "Motive Flow",
+  "short_name": "Flow",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f5f5f7",
+  "theme_color": "#f5f5f7",
+  "description": "A calmer place to plan, organize, focus, and capture ideas.",
+  "icons": [
+    { "src": "assets/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
